@@ -574,7 +574,8 @@ public class GUIController implements Features {
     for (IStock is : model.getStockFromPortfolio(portfolioName)) {
       if (LocalDate.parse(is.getPurchaseDate(), ff).compareTo(compositionDate) <= 0) {
         if (stockData.containsKey(is.getStockName())) {
-          stockData.put(is.getStockName(), stockData.get(is.getStockName()) + is.getStockQuantity());
+          stockData.put(is.getStockName(), stockData.get(is.getStockName())
+                  + is.getStockQuantity());
         } else {
           stockData.put(is.getStockName(), (double) is.getStockQuantity());
           stockNames += is.getStockName() + ",";

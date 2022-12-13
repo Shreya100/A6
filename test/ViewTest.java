@@ -49,17 +49,17 @@ public class ViewTest {
 
     @Override
     public void showRebalancePortfolioMessage() {
-
+      // do nothing here
     }
 
     @Override
     public void showRebalanceDateMessage() {
-
+      // do nothing here
     }
 
     @Override
     public void displayRebalancePortfolio() {
-
+      // do nothing here
     }
 
     @Override

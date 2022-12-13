@@ -15,12 +15,22 @@ import model.IStock;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Junit tests for GUI Controller .
+ */
 public class GUIControllerTest {
 
+  /**
+   * Mock Model for GUI Controller.
+   */
   class MockGUIView implements IGUIView {
 
     StringBuilder log;
 
+    /**
+     * Constructor that initializes the log.
+     * @param log logging object.
+     */
     public MockGUIView(StringBuilder log) {
       this.log = log;
     }
@@ -28,32 +38,32 @@ public class GUIControllerTest {
 
     @Override
     public void addFeatures(Features features) {
-
+      // do nothing.
     }
 
     @Override
     public void showRetrievedPortfolios(List<String> portfolios) {
-
+      // do nothing.
     }
 
     @Override
     public void selectPortfolioFile() {
-
+      // do nothing.
     }
 
     @Override
     public void showMenuMessage() {
-
+      // do nothing.
     }
 
     @Override
     public void showPortfolioReBalanceMessage(String portfolioName) {
-
+      // do nothing.
     }
 
     @Override
     public void displayStocks(String stockNames) {
-
+      // do nothing.
     }
 
     @Override
@@ -73,17 +83,17 @@ public class GUIControllerTest {
 
     @Override
     public void showPortfolioCreatedMessage(String portfolioName) {
-
+      // do nothing.
     }
 
     @Override
     public void showDateInputDialogBox() {
-
+      // do nothing.
     }
 
     @Override
     public void showPortfolioList(List<String> portfolio) {
-
+      // do nothing.
     }
 
     @Override
@@ -103,37 +113,37 @@ public class GUIControllerTest {
 
     @Override
     public void showExaminePortfolioData(List<IStock> portfolioData) {
-
+      // do nothing.
     }
 
     @Override
     public void showFileDialogForPortfolioFile() {
-
+      // do nothing.
     }
 
     @Override
     public void showLabelForMenuItem(String labelMessage) {
-
+      // do nothing.
     }
 
     @Override
     public void showMessage(String message) {
-
+      // do nothing.
     }
 
     @Override
     public void showExamineForADateButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showReBalanceForADateButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showCostBasisButton() {
-
+      // do nothing.
     }
 
     @Override
@@ -143,52 +153,52 @@ public class GUIControllerTest {
 
     @Override
     public void showCostBasisValueMessage(String s) {
-
+      // do nothing.
     }
 
     @Override
     public void showExamineButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showReBalanceButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showPortfolioValueButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showPortfolioValueMessage(String s) {
-
+      // do nothing.
     }
 
     @Override
     public void showMessageForStock(String s) {
-
+      // do nothing.
     }
 
     @Override
     public void showQuantityMessage(String s) {
-
+      // do nothing.
     }
 
     @Override
     public void showAddStockButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showStockListDropDown(List<String> supportedStock) {
-
+      // do nothing.
     }
 
     @Override
     public void showQuantitySpinner() {
-
+      // do nothing.
     }
 
     @Override
@@ -203,12 +213,12 @@ public class GUIControllerTest {
 
     @Override
     public void showStockAddedMessage(String s) {
-
+      // do nothing.
     }
 
     @Override
     public void stockSymbolFromPortfolio(List<IStock> stockNames, String portfolioName) {
-
+      // do nothing.
     }
 
     @Override
@@ -218,7 +228,7 @@ public class GUIControllerTest {
 
     @Override
     public void showDatesForSelling(String selectedStockForSell, List<IStock> stockNames) {
-
+      // do nothing.
     }
 
     @Override
@@ -227,33 +237,34 @@ public class GUIControllerTest {
     }
 
     @Override
-    public void showStockQuantityForSelling(String selectedDateForSell, String selectedStockForSell, List<IStock> stockNames) {
-
+    public void showStockQuantityForSelling(String selectedDateForSell,
+                                            String selectedStockForSell, List<IStock> stockNames) {
+      // do nothing.
     }
 
     @Override
     public void showStockContinueButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showStocksSoldMessage(String s) {
-
+      // do nothing.
     }
 
     @Override
     public void showPerformanceOverTimeData(IPortfolioPerformanceData performanceData) {
-
+      // do nothing.
     }
 
     @Override
     public void showPerformanceStartDateInputDialogBox() {
-
+      // do nothing.
     }
 
     @Override
     public void showPerformanceOverTimeButton() {
-
+      // do nothing.
     }
 
     @Override
@@ -263,7 +274,7 @@ public class GUIControllerTest {
 
     @Override
     public void showEndDateDialogBox() {
-
+      // do nothing.
     }
 
     @Override
@@ -273,12 +284,12 @@ public class GUIControllerTest {
 
     @Override
     public void showInvestInPortfolioButton(String portfolioName) {
-
+      // do nothing.
     }
 
     @Override
     public void showTextFieldForInvestmentAmount(String portfolioName) {
-
+      // do nothing.
     }
 
     @Override
@@ -288,32 +299,32 @@ public class GUIControllerTest {
 
     @Override
     public void showSelectStocksForInvestmentButton() {
-
+      // do nothing.
     }
 
     @Override
     public void showStocksListForInvestment(String amount, List<String> stockList) {
-
+      // do nothing.
     }
 
     @Override
     public void showInvestMoreButton() {
-
+      // do nothing.
     }
 
     @Override
     public void clearScreen() {
-
+      // do nothing.
     }
 
     @Override
     public void showList() {
-
+      // do nothing.
     }
 
     @Override
     public void getCommissionFee() {
-
+      // do nothing.
     }
 
     @Override
@@ -328,37 +339,37 @@ public class GUIControllerTest {
 
     @Override
     public void addShowMenuToPanel() {
-
+      // do nothing.
     }
 
     @Override
     public void showTextFieldsForInputs() {
-
+      // do nothing.
     }
 
     @Override
     public void showTextFieldsForInputsRebalance() {
-
+      // do nothing.
     }
 
     @Override
     public void showStocksButton() {
-
+      // do nothing.
     }
 
     @Override
     public void removePreviousMessage() {
-
+      // do nothing.
     }
 
     @Override
     public void showSupportedStockList(List<String> stockList, String stockName) {
-
+      // do nothing.
     }
 
     @Override
     public void addCreatePortfolioButton() {
-
+      // do nothing.
     }
 
     @Override
@@ -409,7 +420,8 @@ public class GUIControllerTest {
   @Test
   public void getStocksOfPortfolioInvalidPortfolioName() {
     controller.getStocksOfPortfolio("portfolio3");
-    assertEquals("Portfolio name not found. Enter valid portfolio Name", viewLog.toString());
+    assertEquals("Portfolio name not found. Enter valid portfolio Name",
+            viewLog.toString());
   }
 
   @Test

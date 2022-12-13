@@ -6,7 +6,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.FileDialog;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,8 +20,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
-
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.JPanel;
 import guicontroller.Features;
 import model.IPortfolioPerformanceData;
 import model.IStock;
@@ -43,23 +60,15 @@ public class GUIView extends JFrame implements IGUIView {
   private final JMenuItem showListOfSupportedStocks;
   private final JMenuItem exit;
   private final JMenuItem createNewPortfolioWithCostAveraging;
-  private final JMenuItem reBalancePortfolioOnASpecificDate;
-  private JTextField portfolioFileName;
-  private JLabel displayMessage;
-  private JTextField textInput;
-  private JTextField investmentAmountTextField;
   private final JButton yes;
   private final JButton no;
-
   private final JButton getStocksBtn;
   private final JLabel labelForGettingPortfolioName;
   private final JPanel panel;
   private final JButton createPortfolioButton;
   private final JButton examinePortfolioForADate;
-
   private final JButton reBalancePortfolioForADate;
   private final JButton examinePortfolioButton;
-
   private final JButton reBalancePortfolioButton;
   private final JButton costBasisButton;
   private final JButton selectPortfolioFileButton;
@@ -78,6 +87,13 @@ public class GUIView extends JFrame implements IGUIView {
   private final JButton noEndDate;
   private final JButton addStockToNewPortfolioButton;
   private final JButton createPfWithCostAveragingButton;
+  private final JMenuItem getCostBasis;
+  private final JButton submitButton;
+  String[] stocks;
+  private JTextField portfolioFileName;
+  private JLabel displayMessage;
+  private JTextField textInput;
+  private JTextField investmentAmountTextField;
   private JComboBox yearDropDown;
   private JComboBox monthDropDown;
   private JComboBox dayDropDown;
@@ -91,7 +107,6 @@ public class GUIView extends JFrame implements IGUIView {
   private JComboBox portfolioListDropDown;
   private JComboBox stockFromPortfolioDropDown;
   private JComboBox supportedDatesDropDown;
-  private final JMenuItem getCostBasis;
   private SpinnerModel model;
   private JSpinner spinner;
   private JSpinner intervalDaysSpinner;
@@ -99,11 +114,7 @@ public class GUIView extends JFrame implements IGUIView {
   private JLabel selectStockLabel;
   private JTextField commissionTextField;
   private JTextField commissionFeePercentageTextField;
-  private final JButton submitButton;
-
   private List<JTextField> stockInputs;
-
-  String[] stocks;
 
   /**
    * This is a public constructor that initializes JFrame and
@@ -137,8 +148,6 @@ public class GUIView extends JFrame implements IGUIView {
     examinePortfolioForADate.setForeground(Color.blue);
     examinePortfolioButton.setForeground(Color.blue);
 
-    reBalancePortfolioOnASpecificDate = new JMenuItem("Examine "
-            + "portfolio on a specific date");
     reBalancePortfolio = new JMenuItem("Rebalance portfolio");
     displayMessage = new JLabel("Do you want to retrieve existing portfolios?");
     reBalancePortfolioForADate = new JButton("Re-balance Portfolio");
@@ -283,7 +292,8 @@ public class GUIView extends JFrame implements IGUIView {
             features.getInputsForDollarCostAveraging());
     yesEndDate.addActionListener(e -> features.showEndDateDialogBox());
     noEndDate.addActionListener(e -> features.showAddStocksButton());
-    addStockToNewPortfolioButton.addActionListener(e -> features.getStockInputsForDollarCost(""));
+    addStockToNewPortfolioButton.addActionListener(e ->
+            features.getStockInputsForDollarCost(""));
     createPfWithCostAveragingButton.addActionListener(e ->
             features.createPortfolioWithDollarCostAveraging());
     addMore.addActionListener(e -> features.createMapForDollarCost());
@@ -397,18 +407,6 @@ public class GUIView extends JFrame implements IGUIView {
   public void displayStocks(String stockNames) {
     stocks = stockNames.split(",");
     stockInputs = new ArrayList<JTextField>();
-//    List<JTextField> txt = new ArrayList<>();
-//    JPanel firstRow = new JPanel(new FlowLayout());
-//    JTextField txt1 = new JTextField(10);
-//    JTextField txt2 = new JTextField(10);
-//    JTextField txt3 = new JTextField(10);
-//    firstRow.add(txt1);
-//    firstRow.add(txt2);
-//    firstRow.add(txt3);
-//    txt.add(txt1);
-//    txt.add(txt2);
-//    txt.add(txt3);
-//    this.stockInputs.add(txt);
     panel.add(new JLabel("Enter the percentage of each stock"));
     JPanel container = new JPanel(new FlowLayout());
     int len = stocks.length;
@@ -1043,7 +1041,6 @@ public class GUIView extends JFrame implements IGUIView {
     JLabel label3 = new JLabel("Enter the date of re-balance");
     model = new SpinnerNumberModel(0, 0, 400, 1);
     textInput = new JTextField(20);
-//    intervalDaysSpinner.setPreferredSize(new Dimension(50, 30));
     panel.add(label);
     panel.add(textInput);
     panel.add(label3);
@@ -1060,9 +1057,6 @@ public class GUIView extends JFrame implements IGUIView {
     panel.add(getStocksBtn);
     add(panel);
     setSize(450, 400);
-//    panel.add(displayMessage);
-//    panel.add(yesEndDate);
-//    panel.add(noEndDate);
     add(panel);
     setVisible(true);
     setSize(600, 400);

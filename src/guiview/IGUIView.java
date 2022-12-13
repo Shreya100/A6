@@ -42,8 +42,16 @@ public interface IGUIView {
    */
   void showMenuMessage();
 
+  /**
+   * Displays success message on portfolio creation.
+   * @param portfolioName name of the portfolio.
+   */
   void showPortfolioReBalanceMessage(String portfolioName);
 
+  /**
+   * Displays all the stocks names.
+   * @param stockNames stock names.
+   */
   void displayStocks(String stockNames);
 
   /**
@@ -144,7 +152,6 @@ public interface IGUIView {
    */
   void showExamineForADateButton();
 
-  void showReBalanceForADateButton();
 
   /**
    * This method displays the cost basis button.
@@ -169,8 +176,6 @@ public interface IGUIView {
    * This method displays examine portfolio button.
    */
   void showExamineButton();
-
-  void showReBalanceButton();
 
   /**
    * This method displays get portfolio value button.
@@ -415,6 +420,9 @@ public interface IGUIView {
    */
   void showTextFieldsForInputs();
 
+  /**
+   * Prompts the inputs of portfolio rebalance.
+   */
   void showTextFieldsForInputsRebalance();
 
   /**

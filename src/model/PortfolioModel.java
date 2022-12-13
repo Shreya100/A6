@@ -303,7 +303,8 @@ public class PortfolioModel implements IModel {
                 .mapToDouble(s -> s.getStockQuantity())
                 .sum();
         if (totalStockQuantity <= 0) {
-          throw new IllegalArgumentException("Stocks need to be purchased before they can be sold.");
+          throw new IllegalArgumentException("Stocks need to be "
+                  + "purchased before they can be sold.");
         }
         if (quantity > totalStockQuantity) {
           throw new IllegalArgumentException("Please enter valid stock quantity.");
@@ -314,29 +315,6 @@ public class PortfolioModel implements IModel {
                 new Stock(stockTickerSymbol,
                         -(float) quantity, stockSellDate.toString()),
                 commissionFee);
-
-        /*for (IStock stock : stockList) {
-          if (stock.getStockName().equals(stockTickerSymbol)) {
-            if (quantity <= stock.getStockQuantity()) {
-              double updatedStockQuantity = stock.getStockQuantity() - quantity;
-              if (updatedStockQuantity == 0) {
-                selectedPortfolio.deleteStock(stock);
-              } else {
-                selectedPortfolio.updateStock(dataStore, new Stock(stock.getStockName(),
-                        (float) updatedStockQuantity, stock.getPurchaseDate()), stock);
-              }
-              //break;
-              selectedPortfolio.addStock(dataStore,
-                      new Stock(stock.getStockName(),
-                              -(float) updatedStockQuantity, stockSellDate.toString()),
-                      commissionFee);
-
-            } else {
-              throw new IllegalArgumentException("Please enter valid stock quantity");
-            }
-          }
-        }*/
-
         updateCommissionFee();
 
         PortfolioModelFileUtility.writePortfolioToFile(selectedPortfolio,
@@ -469,7 +447,8 @@ public class PortfolioModel implements IModel {
     if (pfIndex == -1) {
       throw new IllegalArgumentException("No Such portfolio exists!");
     }
-    PortfolioVisitor<IPortfolio> visitor = new PortfolioBalanceVisitor<>(d, this.dataStore, ds, x -> x);
+    PortfolioVisitor<IPortfolio> visitor = new PortfolioBalanceVisitor<>(d,
+            this.dataStore, ds, x -> x);
     this.portfolios.set(pfIndex, visitor.apply(this.portfolios.get(pfIndex)));
   }
 

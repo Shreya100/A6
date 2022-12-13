@@ -14,6 +14,10 @@ import java.util.function.Function;
 
 import model.stockdatastore.IStockDataStore;
 
+/**
+ * Visitor class for PortfolioBalance.
+ * @param <T> Generic type.
+ */
 public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
   private final LocalDate d;
@@ -22,7 +26,16 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
   private final Comparator<IStock> compareByDate;
   private final Function<IPortfolio, T> ff;
 
-  public PortfolioBalanceVisitor(LocalDate d, IStockDataStore ds, Map<String, Double> bp, Function<IPortfolio, T> fp) {
+  /**
+   * Constructor for Balance Portfolio Visitor class.
+   * It initializes date, datastore, stock percentages and function.
+   * @param d date
+   * @param ds datastore
+   * @param bp stock percentages
+   * @param fp function
+   */
+  public PortfolioBalanceVisitor(LocalDate d, IStockDataStore ds, Map<String, Double> bp,
+                                 Function<IPortfolio, T> fp) {
     this.d = d;
     this.ds = ds;
     this.balancePercent = bp;
@@ -31,7 +44,8 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
       public int compare(IStock m1, IStock m2) {
         try {
           return new SimpleDateFormat("yyyy-MM-dd").parse(m1.getPurchaseDate())
-                  .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(m2.getPurchaseDate()));
+                  .compareTo(
+                          new SimpleDateFormat("yyyy-MM-dd").parse(m2.getPurchaseDate()));
         } catch (ParseException e) {
           throw new RuntimeException(e);
         }
@@ -104,11 +118,13 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
     for (int i = 0; i < test.size(); i++) {
       if (operation.get(i).equalsIgnoreCase("buy")) {
-        IStock temp = new Stock(test.get(i), opsPerformed.get(test.get(i)).floatValue(), this.d.format(ff));
+        IStock temp = new Stock(test.get(i), opsPerformed.get(test.get(i)).floatValue(),
+                this.d.format(ff));
         sts.add(temp);
       } else {
 
-        IStock temp = new Stock(test.get(i), -1 * opsPerformed.get(test.get(i)).floatValue(), this.d.format(ff));
+        IStock temp = new Stock(test.get(i), -1 * opsPerformed.get(test.get(i))
+                .floatValue(), this.d.format(ff));
         sts.add(temp);
       }
     }
@@ -122,20 +138,6 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
       rv.addStock(this.ds, xx, 0);
     }
     return this.ff.apply(rv);
-
-
-    // for every buy, just add on given dates
-    // for every sell, sell it till it becomes zero
-    // finally create new instance of iportfolio and return it.
-
-    // buy / sell from the stocks.
-
-//    sort 'sts' over the date in reverse manner
-    // now for all sells, searh for the stocks and sell them
-    // for all buys, buy stocks on given date
-    // create instance of iportfolio return it.
-//    iterate over opsPerformed and if buy, buy a stock
-    // if sell, iterate over sts and remove the stock from the day which is less than given dates.
 
   }
 }

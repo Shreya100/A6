@@ -38,6 +38,10 @@ public interface Features {
    */
   void examinePortfolioOnASpecificDate();
 
+  /**
+   * This method prompts inputs for portfolio
+   * rebalance by delegating it to view.
+   */
   void reBalancePortfolioOnASpecificDate();
 
   /**
@@ -45,6 +49,11 @@ public interface Features {
    */
   void examinePortfolioWithDate();
 
+  /**
+   * This method communicates with the model to
+   * reblance the portfolio.
+   * @param stocks stock names along with their percentages.
+   */
   void reBalancePortfolioWithDate(Map<String, Double> stocks);
 
   /**
@@ -184,5 +193,10 @@ public interface Features {
    */
   void createMapForDollarCost();
 
+  /**
+   * This method interacts with the model to fecth
+   * the stocks from the portfolio.
+   * @param portfolioName portfolio name.
+   */
   void getStocksOfPortfolio(String portfolioName);
 }

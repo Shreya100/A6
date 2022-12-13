@@ -198,17 +198,17 @@ public class ControllerTest {
 
     @Override
     public void showRebalancePortfolioMessage() {
-
+      //do nothing here
     }
 
     @Override
     public void showRebalanceDateMessage() {
-
+      //do nothing here
     }
 
     @Override
     public void displayRebalancePortfolio() {
-
+      //do nothing here
     }
 
     @Override
@@ -894,10 +894,12 @@ public class ControllerTest {
     IModel model = new MockModel(modelLog);
     IView view = new MockView(viewLog);
 
-    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-12-30\r90,10\r10".getBytes());
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-12-30\r90,10\r10"
+            .getBytes());
     IController controller = new PortfolioController(model, view, in);
     controller.start();
-    String expectedLog = "Portfolio name: portfolio1Portfolio Name: portfolio1Date: 2022-12-30MSFT :10.0AAPL :90.0";
+    String expectedLog = "Portfolio name: portfolio1Portfolio Name: portfolio1Date: "
+            + "2022-12-30MSFT :10.0AAPL :90.0";
     assertEquals(expectedLog, modelLog.toString());
 
   }
@@ -909,11 +911,12 @@ public class ControllerTest {
     IModel model = new MockModel(modelLog);
     IView view = new MockView(viewLog);
 
-    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r100\r2022-12-30\r90,10\r10".getBytes());
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r100\r2022-12-30\r90,10\r10"
+            .getBytes());
     IController controller = new PortfolioController(model, view, in);
     controller.start();
-    String expectedLog = "The given portfolio cannot be rebalanced because the number does not " +
-            "represent a portfolio from the list of portfolios.";
+    String expectedLog = "The given portfolio cannot be rebalanced because the number does not "
+            + "represent a portfolio from the list of portfolios.";
     assertEquals(expectedLog, viewLog.toString());
   }
 
@@ -928,7 +931,8 @@ public class ControllerTest {
     IController controller = new PortfolioController(model, view, in);
     controller.start();
     String expectedLog = "Show options\n"
-            + "The given date is not in the correct format. Please make sure that the date is in the format"
+            + "The given date is not in the correct format. Please make sure that "
+            + "the date is in the format"
             + ": yyyy-MM-ddShow options\n" +
             "The given input is not an integer within the application's acceptable range, please "
             + "try again.Show options\n";
@@ -942,7 +946,8 @@ public class ControllerTest {
     IModel model = new MockModel(modelLog);
     IView view = new MockView(viewLog);
 
-    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-12-30\r100,10\r10".getBytes());
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-12-30\r100,10\r10"
+            .getBytes());
     IController controller = new PortfolioController(model, view, in);
     controller.start();
     String expectedLog = "Show options\n"
