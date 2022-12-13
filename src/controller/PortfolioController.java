@@ -120,7 +120,7 @@ public class PortfolioController implements IController {
     }
   }
 
-  private void helperForRebalancingPortfolio(){
+  private void helperForRebalancingPortfolio() {
     List<String> pfNames;
 
     //Get portfolios list
@@ -133,64 +133,71 @@ public class PortfolioController implements IController {
       String date;
       try {
         portfolioNumber = in.nextInt();
-        if(portfolioNumber < 0 || portfolioNumber > pfNames.size()) {
+        if (portfolioNumber < 0 || portfolioNumber > pfNames.size()) {
           throw new IndexOutOfBoundsException("");
         }
         view.showRebalanceDateMessage();
         date = in.next();
         LocalDate compositionDate = LocalDate.parse(date,
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         try {
           Map<String, Double> sp = new HashMap<>();
           DateTimeFormatter ff = DateTimeFormatter.ofPattern("yyyy-MM-dd");
           Map<String, Double> stockData = new HashMap<>();
           String stockNames = "";
-          for(IStock is : model.getStockFromPortfolio(pfNames.get(portfolioNumber - 1))) {
-            if(LocalDate.parse(is.getPurchaseDate(), ff).compareTo(compositionDate) <= 0) {
-              if(stockData.containsKey(is.getStockName())) {
-                stockData.put(is.getStockName(), stockData.get(is.getStockName())+is.getStockQuantity());
+          for (IStock is : model.getStockFromPortfolio(pfNames.get(portfolioNumber - 1))) {
+            if (LocalDate.parse(is.getPurchaseDate(), ff).compareTo(compositionDate) <= 0) {
+              if (stockData.containsKey(is.getStockName())) {
+                stockData.put(is.getStockName(), stockData.get(is.getStockName()) + is.getStockQuantity());
               } else {
                 stockData.put(is.getStockName(), (double) is.getStockQuantity());
                 stockNames += is.getStockName() + ",";
               }
             }
           }
-          stockNames = stockNames.substring(0, stockNames.length()-1);
+          stockNames = stockNames.substring(0, stockNames.length() - 1);
           System.out.println("Specify the percents of following stocks in comma seperated manner");
           System.out.println(stockNames);
           System.out.println("Specify comma seperated list of percents for above stocks.");
           String percents = in.next();
-          if(percents.split(",").length != stockNames.split(",").length) {
+          if (percents.split(",").length != stockNames.split(",").length) {
             throw new IllegalArgumentException("Percents length should be same as stocks!");
           }
           String[] stockNameArr = stockNames.split(",");
           String[] percentArr = percents.split(",");
           Double pp = 100d;
-          for(int kk =0; kk < stockNameArr.length; kk++) {
+          for (int kk = 0; kk < stockNameArr.length; kk++) {
             Double value = Math.round(Double.valueOf(percentArr[kk]) * 100.0) / 100.0;
-            if(value < 0 || value > pp) {
+            if (value < 0 || value > pp) {
               throw new IllegalArgumentException("Entered Percents are not valid!");
             }
             pp -= value;
             sp.put(stockNameArr[kk], value);
           }
-          model.balancePortfolio(pfNames.get(portfolioNumber-1), compositionDate, sp);
+          if (pp > 0) {
+            throw new IllegalArgumentException("Entered Percents are not valid!");
+          }
+          model.balancePortfolio(pfNames.get(portfolioNumber - 1), compositionDate, sp);
           view.displayRebalancePortfolio();
         } catch (IndexOutOfBoundsException e) {
           view.showErrorMessage("The given portfolio cannot be examined because the "
-              + "number does not represent "
-              + "a portfolio from the list of portfolios.");
+                  + "number does not represent "
+                  + "a portfolio from the list of portfolios.");
         } catch (IllegalArgumentException | ParseException e) {
           view.showErrorMessage(e.getMessage());
         }
       } catch (InputMismatchException e) {
         view.showErrorMessage("The given input is not an integer within the"
-            + " application's acceptable range, please try again.");
+                + " application's acceptable range, please try again.");
         in.nextLine();
       } catch (DateTimeParseException e) {
         view.showErrorMessage("The given date is not in the correct format."
-            + " Please make sure that the date is "
-            + "in the format: yyyy-MM-dd");
+                + " Please make sure that the date is "
+                + "in the format: yyyy-MM-dd");
+      } catch (IndexOutOfBoundsException e) {
+        view.showErrorMessage("The given portfolio cannot be rebalanced because the "
+                + "number does not represent "
+                + "a portfolio from the list of portfolios.");
       }
     } else {
       view.showNoPortfolioCreatedError();
@@ -323,32 +330,32 @@ public class PortfolioController implements IController {
           view.showSellStockDateMessage();
           date = in.next();
           LocalDate stockSellDate = LocalDate.parse(date,
-              DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                  DateTimeFormatter.ofPattern("yyyy-MM-dd"));
           view.showSellStockQuantityMessage();
           quantity = in.nextInt();
           model.sellStocksFromPortfolio(pfNames.get(portfolioNumber - 1),
-              stockTickerSymbol,
-              quantity,
-              stockSellDate);
+                  stockTickerSymbol,
+                  quantity,
+                  stockSellDate);
           view.showSuccessfulSellStockMessage();
         } else {
           view.showErrorMessage("Selected portfolio does not contain the provided"
-              + " stock " + stockTickerSymbol + ".");
+                  + " stock " + stockTickerSymbol + ".");
         }
       } catch (InputMismatchException e) {
         view.showErrorMessage("The given input is not an integer within the "
-            + "application's acceptable range, please try again.");
+                + "application's acceptable range, please try again.");
         in.nextLine();
       } catch (IllegalArgumentException e) {
         view.showErrorMessage(e.getMessage());
       } catch (DateTimeParseException e) {
         view.showErrorMessage("The given date is not in the correct format."
-            + " Please make sure that the date is "
-            + "in the format: yyyy-MM-dd");
+                + " Please make sure that the date is "
+                + "in the format: yyyy-MM-dd");
       } catch (IndexOutOfBoundsException e) {
         view.showErrorMessage("The cost basis for the given portfolio cannot be "
-            + "calculated because the number does not represent "
-            + "a portfolio from the list of portfolios.");
+                + "calculated because the number does not represent "
+                + "a portfolio from the list of portfolios.");
       }
     } else {
       view.showNoPortfolioCreatedError();

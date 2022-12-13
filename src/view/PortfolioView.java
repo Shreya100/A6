@@ -24,7 +24,7 @@ public class PortfolioView implements IView {
    * @param out the PrintStream object which will be used for the view's output
    */
   public PortfolioView(PrintStream out) {
-      this.out = out;
+    this.out = out;
   }
 
   @Override
@@ -35,10 +35,10 @@ public class PortfolioView implements IView {
   @Override
   public void showRebalanceDateMessage() {
     out.println("Enter the date for which you wish to rebalance the portfolio "
-        + "(Date format: " + dateFormat + " )");
+            + "(Date format: " + dateFormat + " )");
   }
 
-  public void displayRebalancePortfolio(){
+  public void displayRebalancePortfolio() {
     out.println("Portfolio rebalanced successfully");
   }
 
@@ -57,6 +57,7 @@ public class PortfolioView implements IView {
     out.println("8: Get the performance over time for a portfolio");
     out.println("9: Invest in an existing portfolio");
     out.println("10: Quit");
+    out.println("11: Re-balance Portfolio");
     out.print("Enter your choice: ");
   }
 
@@ -328,13 +329,13 @@ public class PortfolioView implements IView {
   @Override
   public void showAmountToBeInvestedInEachStockMessage() {
     out.println("Please enter the percentage amount that you wish to invest "
-                        + "in each stocks");
+            + "in each stocks");
   }
 
   @Override
   public void showInvestmentDateMessage() {
     out.println("Please enter the date on which you wish to investment "
-                        + "(date format:- yyyy-MM-dd) :- ");
+            + "(date format:- yyyy-MM-dd) :- ");
   }
 
   @Override

@@ -1,5 +1,7 @@
 package guicontroller;
 
+import java.util.Map;
+
 /**
  * This interface represents the features or operations that
  * GUI will perform.
@@ -36,10 +38,14 @@ public interface Features {
    */
   void examinePortfolioOnASpecificDate();
 
+  void reBalancePortfolioOnASpecificDate();
+
   /**
    * This method examines the portfolio with no specific date.
    */
   void examinePortfolioWithDate();
+
+  void reBalancePortfolioWithDate(Map<String, Double> stocks);
 
   /**
    * This method takes the CSV file input from user.
@@ -177,4 +183,6 @@ public interface Features {
    * Create a map of stock-percentages to be used for the portfolio's dollar cost averaging.
    */
   void createMapForDollarCost();
+
+  void getStocksOfPortfolio(String portfolioName);
 }

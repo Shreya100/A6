@@ -22,7 +22,7 @@ import model.stockdatastore.IStockDataStore;
  * market value on a given date'.
  */
 public class Portfolio implements IPortfolio {
-  private List<IStock> stockList;
+  private final List<IStock> stockList;
   private final String portfolioName;
   private HashMap<LocalDate, Double> costBasisMap;
 

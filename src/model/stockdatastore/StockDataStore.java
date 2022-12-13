@@ -38,7 +38,7 @@ public class StockDataStore implements IStockDataStore {
   private final String stockDataFilesDirectory = "StockDataFiles";
   private final String supportedStocksListFile = Paths.get(stockDataFilesDirectory,
           "supported-stocks-list.txt").toString();
-  private Map<String, List<IStockPrice>> stockData;
+  private final Map<String, List<IStockPrice>> stockData;
 
   /**
    * Create a new StockDataStore initialized with the stock data stored in

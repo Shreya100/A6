@@ -48,6 +48,21 @@ public class ViewTest {
     }
 
     @Override
+    public void showRebalancePortfolioMessage() {
+
+    }
+
+    @Override
+    public void showRebalanceDateMessage() {
+
+    }
+
+    @Override
+    public void displayRebalancePortfolio() {
+
+    }
+
+    @Override
     public void getFilename() {
       // do nothing here
     }

@@ -73,7 +73,7 @@ public interface IModel {
    *
    * @param portfolioName the sequence number of portfolio in the list of all existing portfolios
    * @return a list of IStock containing the information of all the stocks present in the
-   *         portfolio
+   * portfolio
    * @throws IndexOutOfBoundsException if the given portfolioNumber is out of bounds of the
    *                                   existing portfolios list
    */

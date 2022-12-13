@@ -1,27 +1,26 @@
 package model;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
 import model.stockdatastore.IStockDataStore;
 
 public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
-  private LocalDate d;
-  private IStockDataStore ds;
-  private Map<String, Double> balancePercent;
-  private Comparator<IStock> compareByDate;
-  private Function<IPortfolio, T> ff;
+  private final LocalDate d;
+  private final IStockDataStore ds;
+  private final Map<String, Double> balancePercent;
+  private final Comparator<IStock> compareByDate;
+  private final Function<IPortfolio, T> ff;
 
   public PortfolioBalanceVisitor(LocalDate d, IStockDataStore ds, Map<String, Double> bp, Function<IPortfolio, T> fp) {
     this.d = d;
@@ -32,7 +31,7 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
       public int compare(IStock m1, IStock m2) {
         try {
           return new SimpleDateFormat("yyyy-MM-dd").parse(m1.getPurchaseDate())
-              .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(m2.getPurchaseDate()));
+                  .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(m2.getPurchaseDate()));
         } catch (ParseException e) {
           throw new RuntimeException(e);
         }
@@ -47,10 +46,10 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
     System.out.println("formatted date.....");
 
     Map<String, Double> stocks = new HashMap<>();
-    for(IStock is : p.getStocksList()) {
-      if(LocalDate.parse(is.getPurchaseDate(), ff).compareTo(d) <= 0) {
-        if(stocks.containsKey(is.getStockName())) {
-          stocks.put(is.getStockName(), stocks.get(is.getStockName())+is.getStockQuantity());
+    for (IStock is : p.getStocksList()) {
+      if (LocalDate.parse(is.getPurchaseDate(), ff).compareTo(d) <= 0) {
+        if (stocks.containsKey(is.getStockName())) {
+          stocks.put(is.getStockName(), stocks.get(is.getStockName()) + is.getStockQuantity());
         } else {
           stocks.put(is.getStockName(), (double) is.getStockQuantity());
         }
@@ -62,7 +61,7 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
     Double totalMoney = 0d;
     Map<String, Double> stockMoney = new HashMap<>();
-    for(Map.Entry<String, Double> stock : stocks.entrySet()) {
+    for (Map.Entry<String, Double> stock : stocks.entrySet()) {
       double cost = this.ds.getStockValue(stock.getKey(), this.d) * stock.getValue();
       totalMoney += cost;
       stockMoney.put(stock.getKey(), cost);
@@ -75,20 +74,20 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
     Map<String, Double> opsPerformed = new LinkedHashMap<>();
     List<String> operation = new ArrayList<>();
-    for(Map.Entry<String, Double> stock : this.balancePercent.entrySet()) {
+    for (Map.Entry<String, Double> stock : this.balancePercent.entrySet()) {
       Double stockPercent = (stockMoney.get(stock.getKey()) / totalMoney) * 100;
       System.out.println(stockPercent);
       double worth = 0d;
-      if(stockPercent.equals(stock.getValue())) {
+      if (stockPercent.equals(stock.getValue())) {
         continue;
-      } else if(stockPercent < stock.getValue()) {
-        worth = ((stock.getValue() - stockPercent)/100) * totalMoney;
+      } else if (stockPercent < stock.getValue()) {
+        worth = ((stock.getValue() - stockPercent) / 100) * totalMoney;
         operation.add("buy");
       } else {
-        worth = ((stockPercent - stock.getValue())/100) * totalMoney;
+        worth = ((stockPercent - stock.getValue()) / 100) * totalMoney;
         operation.add("sell");
       }
-      String vv = String.format("%.2f",  worth / this.ds.getStockValue(stock.getKey(), this.d));
+      String vv = String.format("%.2f", worth / this.ds.getStockValue(stock.getKey(), this.d));
       opsPerformed.put(stock.getKey(), Double.valueOf(vv));
     }
 
@@ -103,13 +102,13 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
     sts.sort(this.compareByDate);
 
-    for(int i =0; i<test.size(); i++) {
-      if(operation.get(i).equalsIgnoreCase("buy")) {
+    for (int i = 0; i < test.size(); i++) {
+      if (operation.get(i).equalsIgnoreCase("buy")) {
         IStock temp = new Stock(test.get(i), opsPerformed.get(test.get(i)).floatValue(), this.d.format(ff));
         sts.add(temp);
       } else {
 
-        IStock temp = new Stock(test.get(i), -1*opsPerformed.get(test.get(i)).floatValue(), this.d.format(ff));
+        IStock temp = new Stock(test.get(i), -1 * opsPerformed.get(test.get(i)).floatValue(), this.d.format(ff));
         sts.add(temp);
       }
     }
@@ -119,11 +118,10 @@ public class PortfolioBalanceVisitor<T> implements PortfolioVisitor<T> {
 
     IPortfolio rv = new Portfolio(p.getPortfolioName());
     for (IStock xx :
-    sts) {
+            sts) {
       rv.addStock(this.ds, xx, 0);
     }
     return this.ff.apply(rv);
-
 
 
     // for every buy, just add on given dates

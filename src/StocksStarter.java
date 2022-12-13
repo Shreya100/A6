@@ -1,13 +1,8 @@
-import controller.IController;
-import controller.PortfolioController;
-import guicontroller.Features;
 import guicontroller.GUIController;
 import guiview.GUIView;
 import guiview.IGUIView;
 import model.IModel;
 import model.PortfolioModel;
-import view.IView;
-import view.PortfolioView;
 
 /**
  * This is starter class of the application. The sole purpose of this class is to initialize
@@ -23,12 +18,12 @@ public class StocksStarter {
    */
   public static void main(String[] args) {
     IModel model = new PortfolioModel();
-    IView view = new PortfolioView(System.out);
-    IController controller = new PortfolioController(model, view, System.in);
-    controller.start();
+//    IView view = new PortfolioView(System.out);
+//    IController controller = new PortfolioController(model, view, System.in);
+//    controller.start();
 
-//    GUIController controller = new GUIController(model);
-//    IGUIView view = new GUIView("Portfolio");
-//    controller.setView(view);
+    GUIController controller = new GUIController(model);
+    IGUIView view = new GUIView("Portfolio");
+    controller.setView(view);
   }
 }

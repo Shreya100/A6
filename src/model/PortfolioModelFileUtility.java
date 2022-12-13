@@ -101,7 +101,7 @@ public final class PortfolioModelFileUtility {
         if (isNewPortfolio) {
           if (!verifyNonFractionalStockQuantity(stockQuantity)) {
             throw new IllegalArgumentException("Invalid stock quantity for "
-                                                       + stockSymbol + ".");
+                    + stockSymbol + ".");
           }
         }
 

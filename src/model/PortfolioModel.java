@@ -43,11 +43,9 @@ public class PortfolioModel implements IModel {
 
   @Override
   public void createPortfolio(String portfolioName, File file)
-          throws FileNotFoundException,
-          FileAlreadyExistsException,
+          throws
           IOException,
-          IllegalArgumentException,
-          InvalidObjectException {
+          IllegalArgumentException {
     //Check if file exists
     if (!file.exists()) {
       throw new FileNotFoundException("The portfolio file " + file.getAbsolutePath()
@@ -291,19 +289,19 @@ public class PortfolioModel implements IModel {
 
   @Override
   public void sellStocksFromPortfolio(String portfolioName,
-      String stockTickerSymbol,
-      double quantity,
-      LocalDate stockSellDate) {
+                                      String stockTickerSymbol,
+                                      double quantity,
+                                      LocalDate stockSellDate) {
     for (IPortfolio selectedPortfolio : portfolios) {
       if (selectedPortfolio.getPortfolioName().equals(portfolioName)) {
 
         double totalStockQuantity = selectedPortfolio.getStocksList()
-            .stream()
-            .filter(s -> s.getStockName().equals(stockTickerSymbol)
-                && (!LocalDate.parse(s.getPurchaseDate())
-                .isAfter(stockSellDate)))
-            .mapToDouble(s -> s.getStockQuantity())
-            .sum();
+                .stream()
+                .filter(s -> s.getStockName().equals(stockTickerSymbol)
+                        && (!LocalDate.parse(s.getPurchaseDate())
+                        .isAfter(stockSellDate)))
+                .mapToDouble(s -> s.getStockQuantity())
+                .sum();
         if (totalStockQuantity <= 0) {
           throw new IllegalArgumentException("Stocks need to be purchased before they can be sold.");
         }
@@ -313,9 +311,9 @@ public class PortfolioModel implements IModel {
 
         //double updatedStockQuantity = totalStockQuantity - quantity;
         selectedPortfolio.addStock(dataStore,
-            new Stock(stockTickerSymbol,
-                -(float) quantity, stockSellDate.toString()),
-            commissionFee);
+                new Stock(stockTickerSymbol,
+                        -(float) quantity, stockSellDate.toString()),
+                commissionFee);
 
         /*for (IStock stock : stockList) {
           if (stock.getStockName().equals(stockTickerSymbol)) {
@@ -342,10 +340,10 @@ public class PortfolioModel implements IModel {
         updateCommissionFee();
 
         PortfolioModelFileUtility.writePortfolioToFile(selectedPortfolio,
-            selectedPortfolio.getPortfolioName(),
-            portfoliosDirectory,
-            false,
-            selectedPortfolio.getCostBasisMap());
+                selectedPortfolio.getPortfolioName(),
+                portfoliosDirectory,
+                false,
+                selectedPortfolio.getCostBasisMap());
       }
       break;
     }
@@ -460,18 +458,18 @@ public class PortfolioModel implements IModel {
 
   @Override
   public void balancePortfolio(String pfName, LocalDate d, Map<String, Double> ds)
-      throws ParseException {
+          throws ParseException {
     int pfIndex = -1;
-    for(int i=0; i < this.portfolios.size(); i++) {
-      if(Objects.equals(this.portfolios.get(i).getPortfolioName(), pfName)) {
+    for (int i = 0; i < this.portfolios.size(); i++) {
+      if (Objects.equals(this.portfolios.get(i).getPortfolioName(), pfName)) {
         pfIndex = i;
         break;
       }
     }
-    if(pfIndex == -1) {
+    if (pfIndex == -1) {
       throw new IllegalArgumentException("No Such portfolio exists!");
     }
-    PortfolioVisitor<IPortfolio> visitor = new PortfolioBalanceVisitor<>(d, this.dataStore, ds, x->x);
+    PortfolioVisitor<IPortfolio> visitor = new PortfolioBalanceVisitor<>(d, this.dataStore, ds, x -> x);
     this.portfolios.set(pfIndex, visitor.apply(this.portfolios.get(pfIndex)));
   }
 

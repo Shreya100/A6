@@ -42,6 +42,10 @@ public interface IGUIView {
    */
   void showMenuMessage();
 
+  void showPortfolioReBalanceMessage(String portfolioName);
+
+  void displayStocks(String stockNames);
+
   /**
    * This method shows the dialog box for errors
    * or messages.
@@ -140,6 +144,8 @@ public interface IGUIView {
    */
   void showExamineForADateButton();
 
+  void showReBalanceForADateButton();
+
   /**
    * This method displays the cost basis button.
    */
@@ -163,6 +169,8 @@ public interface IGUIView {
    * This method displays examine portfolio button.
    */
   void showExamineButton();
+
+  void showReBalanceButton();
 
   /**
    * This method displays get portfolio value button.
@@ -406,6 +414,8 @@ public interface IGUIView {
    * dollar-cost averaging strategy.
    */
   void showTextFieldsForInputs();
+
+  void showTextFieldsForInputsRebalance();
 
   /**
    * This method shows the button to add more stocks.

@@ -2,10 +2,12 @@ package guicontroller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import guiview.IGUIView;
@@ -20,7 +22,7 @@ import model.IStock;
  */
 
 public class GUIController implements Features {
-  private IModel model;
+  private final IModel model;
   private IGUIView view;
   private String portfolioName;
   private LocalDate compositionDate;
@@ -90,15 +92,21 @@ public class GUIController implements Features {
   @Override
   public void examinePortfolioOnASpecificDate() {
     view.showLabelForMenuItem("Select the portfolio you"
-        + " wish to examine.");
+            + " wish to examine.");
     if (showPortfolioList()) {
       view.showMessage("Please select the date for which you want "
-          + "to examine the portfolio.");
+              + "to examine the portfolio.");
       view.showDateInputDialogBox();
       view.showExamineForADateButton();
     } else {
       view.showMenuMessage();
     }
+  }
+
+
+  @Override
+  public void reBalancePortfolioOnASpecificDate() {
+    view.showTextFieldsForInputsRebalance();
   }
 
   @Override
@@ -107,16 +115,47 @@ public class GUIController implements Features {
     portfolioName = view.getPortfolioNameFromDropDown();
     try {
       List<IStock> portfolioData = model.examinePortfolioForADate(portfolioName,
-          compositionDate);
+              compositionDate);
       if (portfolioData.isEmpty()) {
         view.showDialogBox("No stocks are present in the portfolio "
-            + portfolioName
-            + " for the date " + compositionDate.toString());
+                + portfolioName
+                + " for the date " + compositionDate.toString());
       } else {
         view.showExaminePortfolioData(portfolioData);
       }
     } catch (IllegalArgumentException e) {
       view.showDialogBox(e.getMessage());
+    }
+  }
+
+  @Override
+  public void reBalancePortfolioWithDate(Map<String, Double> stocks) {
+    getDate();
+    portfolioName = view.getPortfolioNameFromTextField();
+    Double pp = 100d;
+    for (Map.Entry<String, Double> stock : stocks.entrySet()) {
+      Double value = Math.round(Double.valueOf(stock.getValue() * 100.0)) / 100.0;
+      if (value < 0 || value > pp) {
+        view.showDialogBox("Entered Percents are not valid!");
+        return;
+      }
+      pp -= value;
+      stocks.put(stock.getKey(), value);
+    }
+    if (pp > 0) {
+      view.showDialogBox("Entered Percents are not valid!");
+      return;
+    }
+    try {
+      model.balancePortfolio(portfolioName,
+              compositionDate, stocks);
+      view.showPortfolioReBalanceMessage(portfolioName);
+    } catch (IllegalArgumentException e) {
+      view.showDialogBox(e.getMessage());
+    } catch (ParseException e) {
+      view.showDialogBox(e.getMessage());
+    } catch (Exception e) {
+      view.showDialogBox("The given date is a holiday. Provide a different date");
     }
   }
 
@@ -128,10 +167,10 @@ public class GUIController implements Features {
   @Override
   public void selectPortfolioForCostBasis() {
     view.showLabelForMenuItem("Select the portfolio you wish "
-        + "to get the cost basis for");
+            + "to get the cost basis for");
     if (showPortfolioList()) {
       view.showMessage("Select the date for which you want "
-          + "to get the cost basis.");
+              + "to get the cost basis.");
       view.showDateInputDialogBox();
       view.showCostBasisButton();
     } else {
@@ -145,14 +184,14 @@ public class GUIController implements Features {
     portfolioName = view.getPortfolioNameFromDropDown();
     double costBasisValue = model.getCostBasis(portfolioName, compositionDate);
     view.showCostBasisValueMessage("Cost basis of portfolio " + portfolioName
-        + " on " + compositionDate.toString()
-        + " is $" + costBasisValue);
+            + " on " + compositionDate.toString()
+            + " is $" + costBasisValue);
   }
 
   @Override
   public void examinePortfolio() {
     view.showLabelForMenuItem("Select the portfolio you"
-        + " wish to examine.");
+            + " wish to examine.");
     if (showPortfolioList()) {
       view.showExamineButton();
     } else {
@@ -170,10 +209,10 @@ public class GUIController implements Features {
   @Override
   public void getInputsForPortfolioValue() {
     view.showLabelForMenuItem("Select the portfolio you"
-        + " wish to get the value for.");
+            + " wish to get the value for.");
     if (showPortfolioList()) {
       view.showMessage("Select the date for which you want "
-          + "to get the portfolio value.");
+              + "to get the portfolio value.");
       view.showDateInputDialogBox();
       view.showPortfolioValueButton();
     } else {
@@ -188,9 +227,9 @@ public class GUIController implements Features {
       portfolioName = view.getPortfolioNameFromDropDown();
       double portfolioValue = model.getPortfolioValue(portfolioName, compositionDate);
       view.showPortfolioValueMessage("The value of portfolio " + portfolioName
-          + " on " + compositionDate.toString()
-          + " is $"
-          + Math.round(portfolioValue * 100.0) / 100.0);
+              + " on " + compositionDate.toString()
+              + " is $"
+              + Math.round(portfolioValue * 100.0) / 100.0);
     } catch (IllegalArgumentException | NoSuchElementException e) {
       view.showDialogBox(e.getMessage());
     }
@@ -199,7 +238,7 @@ public class GUIController implements Features {
   @Override
   public void getInputsForAddStock() {
     view.showLabelForMenuItem("Select the portfolio to which "
-        + "you wish to add stocks");
+            + "you wish to add stocks");
     if (showPortfolioList()) {
       view.showMessageForStock("Select the stock you wish to purchase");
       List<String> supportedStock = model.getListOfSupportedStocks();
@@ -207,7 +246,7 @@ public class GUIController implements Features {
       view.showQuantityMessage("Select the number of stocks you wish to purchase");
       view.showQuantitySpinner();
       view.showMessage("Select the date for which you want "
-          + "to purchase stock.");
+              + "to purchase stock.");
       view.showDateInputDialogBox();
       view.showAddStockButton();
     } else {
@@ -226,9 +265,9 @@ public class GUIController implements Features {
       portfolioName = view.getPortfolioNameFromDropDown();
       try {
         model.addStockToPortfolio(portfolioName, stockName, (float) stockQuantity,
-            compositionDate.toString());
+                compositionDate.toString());
         view.showStockAddedMessage("Stock added successfully to the portfolio "
-            + portfolioName);
+                + portfolioName);
       } catch (NoSuchElementException | IllegalArgumentException e) {
         view.showDialogBox(e.getMessage());
       }
@@ -238,7 +277,7 @@ public class GUIController implements Features {
   @Override
   public void inputsForSellingStock() {
     view.showLabelForMenuItem("Select the portfolio from which you wish"
-        + " to sell stocks");
+            + " to sell stocks");
     if (!showPortfolioList()) {
       view.showMenuMessage();
     } else {
@@ -268,7 +307,7 @@ public class GUIController implements Features {
       view.showDialogBox("Please select a valid date");
     } else {
       view.showStockQuantityForSelling(selectedDateForSell,
-          selectedStockForSell, stockNames);
+              selectedStockForSell, stockNames);
     }
   }
 
@@ -285,9 +324,9 @@ public class GUIController implements Features {
     } else {
       try {
         model.sellStocksFromPortfolio(portfolioName, stockName,
-            quantity, date);
+                quantity, date);
         view.showStocksSoldMessage("Stocks from "
-            + portfolioName + " sold successfully");
+                + portfolioName + " sold successfully");
       } catch (IllegalArgumentException | NoSuchElementException e) {
         view.showDialogBox(e.getMessage());
       }
@@ -297,13 +336,13 @@ public class GUIController implements Features {
   @Override
   public void inputsForPerformanceOverTime() {
     view.showLabelForMenuItem("Select the portfolio for which you wish"
-        + " to view performance over time");
+            + " to view performance over time");
     if (showPortfolioList()) {
       view.showMessage("Select the start date for computing the "
-          + "portfolio's performance over time");
+              + "portfolio's performance over time");
       view.showPerformanceStartDateInputDialogBox();
       view.showMessage("Select the end date for computing the "
-          + "portfolio's performance over time");
+              + "portfolio's performance over time");
       view.showEndDateDialogBox();
       view.showPerformanceOverTimeButton();
     } else {
@@ -314,7 +353,7 @@ public class GUIController implements Features {
   @Override
   public void getPortfolioInput() {
     view.showLabelForMenuItem("Select the portfolio from which you wish"
-        + " to sell stocks");
+            + " to sell stocks");
     if (showPortfolioList()) {
       view.showInvestInPortfolioButton(portfolioName);
     } else {
@@ -328,9 +367,9 @@ public class GUIController implements Features {
     LocalDate performanceEndDate = view.getPerformanceOverTimeEndDate();
 
     IPortfolioPerformanceData performanceData = model.getPortfolioPerformanceData(
-        view.getPortfolioNameFromDropDown(),
-        performanceStartDate,
-        performanceEndDate);
+            view.getPortfolioNameFromDropDown(),
+            performanceStartDate,
+            performanceEndDate);
     view.showPerformanceOverTimeData(performanceData);
   }
 
@@ -364,9 +403,9 @@ public class GUIController implements Features {
         totalAmountInvestedSoFar -= stockQuantity;
       } else {
         float numberOfShares = model.calculateNumberOfShares(stockName, compositionDate,
-            (float) ((stockQuantity / 100) * Float.parseFloat(amount)));
+                (float) ((stockQuantity / 100) * Float.parseFloat(amount)));
         model.addStockToPortfolio(portfolioName, stockName, numberOfShares,
-            compositionDate.toString());
+                compositionDate.toString());
         if (totalAmountInvestedSoFar != 100) {
           view.clearScreen();
           view.showDialogBox("Amount invested successfully");
@@ -405,11 +444,11 @@ public class GUIController implements Features {
     } else {
       try {
         model.createPortfolioWithDollarCostAveraging(portfolioName,
-            investmentAmount,
-            compositionDate,
-            endDate,
-            intervalDays,
-            stockNamePercentageAmount);
+                investmentAmount,
+                compositionDate,
+                endDate,
+                intervalDays,
+                stockNamePercentageAmount);
         view.showDialogBox("Portfolio " + portfolioName + " created successfully");
         stockNamePercentageAmount = new HashMap<>();
         view.addShowMenuToPanel();
@@ -439,7 +478,7 @@ public class GUIController implements Features {
           model.setCommissionFee(Float.parseFloat(commissionFee), 0);
         } else {
           model.setCommissionFee(Float.parseFloat(commissionFee),
-              Float.parseFloat(commissionFeePercentage));
+                  Float.parseFloat(commissionFeePercentage));
           view.addShowMenuToPanel();
         }
       }
@@ -512,6 +551,43 @@ public class GUIController implements Features {
     }
   }
 
+  @Override
+  public void getStocksOfPortfolio(String portfolioName) {
+
+    if (portfolioName.isEmpty()) {
+      view.showDialogBox("Portfolio name cannot be empty!");
+      return;
+    }
+    List<String> portfolio = model.getPortfolioNames();
+    if (!portfolio.contains(portfolioName)) {
+      view.showDialogBox("Portfolio name not found. Enter valid portfolio Name");
+      return;
+    }
+    Map<String, Double> stockData = new HashMap<>();
+    String stockNames = "";
+    DateTimeFormatter ff = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    getDate();
+    if (compositionDate.compareTo(LocalDate.now()) > 0) {
+      view.showDialogBox("Date cannot be in the future");
+      return;
+    }
+    for (IStock is : model.getStockFromPortfolio(portfolioName)) {
+      if (LocalDate.parse(is.getPurchaseDate(), ff).compareTo(compositionDate) <= 0) {
+        if (stockData.containsKey(is.getStockName())) {
+          stockData.put(is.getStockName(), stockData.get(is.getStockName()) + is.getStockQuantity());
+        } else {
+          stockData.put(is.getStockName(), (double) is.getStockQuantity());
+          stockNames += is.getStockName() + ",";
+        }
+      }
+    }
+    if (stockNames.isEmpty()) {
+      view.showDialogBox("No stocks exists in the portfolio on the given date");
+      return;
+    }
+    view.displayStocks(stockNames);
+  }
+
   private boolean showPortfolioList() {
     List<String> portfolio = model.getPortfolioNames();
     if (portfolio.isEmpty()) {
@@ -531,6 +607,6 @@ public class GUIController implements Features {
     String formattedDay = String.format("%02d", Integer.valueOf(day));
     String date = year + "-" + formattedMonth + "-" + formattedDay;
     compositionDate = LocalDate.parse(date,
-        DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            DateTimeFormatter.ofPattern("yyyy-MM-dd"));
   }
 }

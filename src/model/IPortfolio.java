@@ -101,7 +101,7 @@ public interface IPortfolio {
    * value data.
    *
    * @param startDate the start date calculating the portfolio's performance
-   * @param endDate the end date calculating the portfolio's performance
+   * @param endDate   the end date calculating the portfolio's performance
    * @param dataStore the data store containing all the stock price information
    * @return the portfolio's performance consolidated for the given time span
    */

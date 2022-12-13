@@ -8,8 +8,8 @@ import java.util.List;
  * portfolio's performance by considering the portfolio's value over a range of time.
  */
 public class PortfolioPerformanceData implements IPortfolioPerformanceData {
-  private String portfolioName;
-  private List<PerformanceDataFrame> performanceData;
+  private final String portfolioName;
+  private final List<PerformanceDataFrame> performanceData;
   LocalDate startDate;
   LocalDate endDate;
 

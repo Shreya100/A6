@@ -18,7 +18,9 @@ public interface IView {
   void showOptions();
 
   void showRebalancePortfolioMessage();
+
   void showRebalanceDateMessage();
+
   void displayRebalancePortfolio();
 
   /**

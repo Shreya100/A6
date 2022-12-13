@@ -1,4 +1,3 @@
-import java.text.ParseException;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -8,9 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InvalidObjectException;
 import java.nio.file.FileAlreadyExistsException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,14 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import controller.IController;
+import controller.PortfolioController;
 import model.IModel;
 import model.IPortfolioPerformanceData;
 import model.IStock;
+import model.Stock;
 import view.IView;
 
-import static org.junit.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * This class tests the controller's functionality to
@@ -33,7 +36,7 @@ public class ControllerTest {
   private final String testingCsv = "test/testingCsv.csv";
   private final String portfolioName = "college";
 
-  class MockModel implements IModel {
+  static class MockModel implements IModel {
 
     private final StringBuilder log;
 
@@ -74,7 +77,10 @@ public class ControllerTest {
 
     @Override
     public List<String> getPortfolioNames() {
-      return null;
+      List<String> names = new ArrayList<String>();
+      names.add("portfolio1");
+      names.add("portfolio2");
+      return names;
     }
 
     @Override
@@ -142,7 +148,11 @@ public class ControllerTest {
 
     @Override
     public List<IStock> getStockFromPortfolio(String pfName) {
-      return null;
+      log.append("Portfolio name: " + pfName);
+      List<IStock> stocks = new ArrayList<IStock>();
+      stocks.add(new Stock("AAPL", 10, "2022-01-01"));
+      stocks.add(new Stock("MSFT", 25, "2022-03-21"));
+      return stocks;
     }
 
     @Override
@@ -162,7 +172,13 @@ public class ControllerTest {
 
     @Override
     public void balancePortfolio(String pfName, LocalDate d, Map<String, Double> ds)
-        throws ParseException {
+            throws ParseException {
+
+      log.append("Portfolio Name: " + pfName);
+      log.append("Date: " + d);
+      for (Map.Entry<String, Double> stock : ds.entrySet()) {
+        log.append(stock.getKey() + " :" + stock.getValue());
+      }
 
     }
   }
@@ -222,6 +238,7 @@ public class ControllerTest {
 
     @Override
     public void showErrorMessage(String exception) {
+      log.append(exception);
       // do nothing here
     }
 
@@ -869,4 +886,68 @@ public class ControllerTest {
     String expectedResult = "Show options\nInvalid option\nShow options\n";
     assertEquals(expectedResult, log.toString());
   }
+
+  @Test
+  public void testRebalance() {
+    StringBuilder modelLog = new StringBuilder();
+    StringBuilder viewLog = new StringBuilder();
+    IModel model = new MockModel(modelLog);
+    IView view = new MockView(viewLog);
+
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-12-30\r90,10\r10".getBytes());
+    IController controller = new PortfolioController(model, view, in);
+    controller.start();
+    String expectedLog = "Portfolio name: portfolio1Portfolio Name: portfolio1Date: 2022-12-30MSFT :10.0AAPL :90.0";
+    assertEquals(expectedLog, modelLog.toString());
+
+  }
+
+  @Test
+  public void testRebalanceInvalidPortfolio() {
+    StringBuilder modelLog = new StringBuilder();
+    StringBuilder viewLog = new StringBuilder();
+    IModel model = new MockModel(modelLog);
+    IView view = new MockView(viewLog);
+
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r100\r2022-12-30\r90,10\r10".getBytes());
+    IController controller = new PortfolioController(model, view, in);
+    controller.start();
+    String expectedLog = "The given portfolio cannot be rebalanced because the number does not " +
+            "represent a portfolio from the list of portfolios.";
+    assertEquals(expectedLog, viewLog.toString());
+  }
+
+  @Test
+  public void testRebalanceInvalidDate() {
+    StringBuilder modelLog = new StringBuilder();
+    StringBuilder viewLog = new StringBuilder();
+    IModel model = new MockModel(modelLog);
+    IView view = new MockView(viewLog);
+
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-14-31\r90,10\r10".getBytes());
+    IController controller = new PortfolioController(model, view, in);
+    controller.start();
+    String expectedLog = "Show options\n"
+            + "The given date is not in the correct format. Please make sure that the date is in the format"
+            + ": yyyy-MM-ddShow options\n" +
+            "The given input is not an integer within the application's acceptable range, please "
+            + "try again.Show options\n";
+    assertEquals(expectedLog, viewLog.toString());
+  }
+
+  @Test
+  public void testRebalanceInvalidPercentages() {
+    StringBuilder modelLog = new StringBuilder();
+    StringBuilder viewLog = new StringBuilder();
+    IModel model = new MockModel(modelLog);
+    IView view = new MockView(viewLog);
+
+    InputStream in = new ByteArrayInputStream("n\r100\r5\r11\r1\r2022-12-30\r100,10\r10".getBytes());
+    IController controller = new PortfolioController(model, view, in);
+    controller.start();
+    String expectedLog = "Show options\n"
+            + "Entered Percents are not valid!Show options\n";
+    assertEquals(expectedLog, viewLog.toString());
+  }
+
 }

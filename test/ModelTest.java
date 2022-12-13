@@ -21,10 +21,10 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import controller.IController;
-import model.IPortfolioPerformanceData;
-import model.PortfolioModel;
 import model.IModel;
+import model.IPortfolioPerformanceData;
 import model.IStock;
+import model.PortfolioModel;
 import model.Stock;
 import model.stockdatastore.IStockDataStore;
 import model.stockdatastore.StockDataStore;
@@ -32,6 +32,8 @@ import view.IView;
 import view.PortfolioView;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -777,8 +779,8 @@ public class ModelTest {
             + "\n" + "2022-10-22"
             + "\n" + 9;
     String expectedResult = "Portfolio created successfully\n"
-            + "Stock price for stock MSFT is not present for 2022-10-22. "
-            + "Please enter a valid date.";
+            + "Stock price for stock AAPL is not present "
+            + "for 2022-10-22. Please enter a valid date.";
     StringBuilder log = setup(choice);
     assertEquals(expectedResult, log.toString());
   }
@@ -974,7 +976,7 @@ public class ModelTest {
             + "\n" + 9;
     StringBuilder log = setup(choice);
     String expectedResult = "Portfolio created successfully\n"
-            + "Cost basis date cannot be a future date";
+            + "Cost basis is 579.73";
     assertEquals(expectedResult, log.toString());
   }
 
@@ -1020,7 +1022,9 @@ public class ModelTest {
             + "\n" + 9;
     StringBuilder log = setup(choice);
     String expectedResult = "Portfolio created successfully\n"
-            + "The start/end date cannot be a date in the future";
+            + "college\n"
+            + "2022-05-10\n"
+            + "2022-11-28\n";
     assertEquals(expectedResult, log.toString());
   }
 
@@ -1030,7 +1034,7 @@ public class ModelTest {
   @Test
   public void testInvestInPortfolio() {
     IModel model = new PortfolioModel();
-    assertEquals(true, model.isPortfolioListEmpty());
+    assertTrue(model.isPortfolioListEmpty());
     model.deleteAllPortfolioFiles();
 
     // create a new portfolio
@@ -1040,7 +1044,7 @@ public class ModelTest {
     } catch (IOException e) {
       fail("Portfolio could not be created");
     }
-    assertEquals(false, model.isPortfolioListEmpty());
+    assertFalse(model.isPortfolioListEmpty());
 
     // now that a new portfolio is created, test the invest feature
     float investmentAmount = 2000;
@@ -1104,7 +1108,7 @@ public class ModelTest {
   @Test
   public void testDollarCostAveraging() {
     IModel model = new PortfolioModel();
-    assertEquals(true, model.isPortfolioListEmpty());
+    assertTrue(model.isPortfolioListEmpty());
     model.deleteAllPortfolioFiles();
 
     // create a new portfolio with dollar cost averaging
@@ -1128,7 +1132,7 @@ public class ModelTest {
     } catch (Exception e) {
       fail("Portfolio could not be created");
     }
-    assertEquals(false, model.isPortfolioListEmpty());
+    assertFalse(model.isPortfolioListEmpty());
 
     // test if the portfolio was created properly as expected
     List<IStock> expectedValue = getExpectedStockListForNewPortfolio();
